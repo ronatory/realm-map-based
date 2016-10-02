@@ -35,8 +35,29 @@ class MapViewController: UIViewController {
   var locationManager = CLLocationManager()
   var userLocated = false
   var lastAnnotation: MKAnnotation!
+  // ask realm for all objects of type specimen
+  var specimens = try! Realm().objects(Specimen)
   
   //MARK: - Helper Methods
+  
+  func populateMap() {
+    // clear out existing annottions to start fresh
+    mapView.removeAnnotations(mapView.annotations)
+    
+    // refresh speminens property
+    specimens = try! Realm().objects(Specimen)
+    
+    // create annotations for each specimen
+    for specimen in specimens {
+      let coord = CLLocationCoordinate2D(latitude: specimen.latitude, longitude: specimen.longitude)
+      let specimenAnnotation = SpecimenAnnotation(coordinate: coord,
+        title: specimen.name,
+        subtitle: specimen.category.name,
+        specimen: specimen
+      )
+      mapView.addAnnotation(specimenAnnotation)
+    }
+  }
   
   func centerToUsersLocation() {
     let center = mapView.userLocation.coordinate
@@ -77,6 +98,8 @@ class MapViewController: UIViewController {
     } else {
       locationManager.startUpdatingLocation()
     }
+    
+    populateMap()
   }
   
   //MARK: - Actions & Segues
@@ -98,10 +121,28 @@ class MapViewController: UIViewController {
   }
   
   @IBAction func unwindFromAddNewEntry(segue: UIStoryboardSegue) {
+    
+    let addNewEntryController = segue.sourceViewController as! AddNewEntryController
+    let addedSpecimen = addNewEntryController.specimen
+    let addedSpecimenCoordinate = CLLocationCoordinate2D(latitude: addedSpecimen.latitude, longitude: addedSpecimen.longitude)
+    
     if let lastAnnotation = lastAnnotation {
       mapView.removeAnnotation(lastAnnotation)
+    } else {
+      for annotation in mapView.annotations {
+        if let currentAnnotation = annotation as? SpecimenAnnotation {
+          if currentAnnotation.coordinate.longitude == addedSpecimenCoordinate.longitude {
+            mapView.removeAnnotation(currentAnnotation)
+            break
+          }
+        }
+      }
     }
     
+    
+    let annotation = SpecimenAnnotation(coordinate: addedSpecimenCoordinate, title: addedSpecimen.name, subtitle: addedSpecimen.category.name, specimen: addedSpecimen)
+    
+    mapView.addAnnotation(annotation)
     lastAnnotation = nil
   }
   
