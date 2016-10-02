@@ -20,3 +20,16 @@
 * THE SOFTWARE.
 */
 
+import Foundation
+import RealmSwift
+
+class Specimen: Object {
+  dynamic var name = ""
+  dynamic var specimenDescription = ""
+  dynamic var latitude = 0.0
+  dynamic var longitude = 0.0
+  dynamic var created = NSDate()
+  // sets up  a one-to-many relationship between Specimen and Category
+  // each specimen belongs to one category, one category can have many specimens
+  dynamic var category: Category!
+}

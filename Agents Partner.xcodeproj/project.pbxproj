@@ -10,6 +10,7 @@
 		17E5F2821BAEC74100D5B05F /* Specimen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E5F2811BAEC74100D5B05F /* Specimen.swift */; };
 		26C714302604A010230F1338 /* Pods_Agents_Partner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B2FA78B5261E329A718E4D8 /* Pods_Agents_Partner.framework */; };
 		4705C1321DA0476300F00FC3 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4705C1311DA0476300F00FC3 /* README.md */; };
+		4705C1341DA04BE500F00FC3 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4705C1331DA04BE500F00FC3 /* Category.swift */; };
 		A2CFDA981B6A9788007F3C15 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CFDA961B6A9788007F3C15 /* LogViewController.swift */; };
 		A2CFDA991B6A9788007F3C15 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CFDA971B6A9788007F3C15 /* MapViewController.swift */; };
 		A2CFDA9B1B6A9790007F3C15 /* LogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CFDA9A1B6A9790007F3C15 /* LogCell.swift */; };
@@ -49,6 +50,7 @@
 		2619059C1C70994F18A27776 /* Pods-Agents Partner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Agents Partner.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Agents Partner/Pods-Agents Partner.debug.xcconfig"; sourceTree = "<group>"; };
 		3B299348D0AABCC1A69F2D22 /* Pods-Agents Partner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Agents Partner.release.xcconfig"; path = "Pods/Target Support Files/Pods-Agents Partner/Pods-Agents Partner.release.xcconfig"; sourceTree = "<group>"; };
 		4705C1311DA0476300F00FC3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		4705C1331DA04BE500F00FC3 /* Category.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = SOURCE_ROOT; };
 		A2CFDA961B6A9788007F3C15 /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogViewController.swift; path = AgentsPartner/LogViewController.swift; sourceTree = SOURCE_ROOT; };
 		A2CFDA971B6A9788007F3C15 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapViewController.swift; path = AgentsPartner/MapViewController.swift; sourceTree = SOURCE_ROOT; };
 		A2CFDA9A1B6A9790007F3C15 /* LogCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogCell.swift; path = AgentsPartner/LogCell.swift; sourceTree = SOURCE_ROOT; };
@@ -89,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				17E5F2811BAEC74100D5B05F /* Specimen.swift */,
+				4705C1331DA04BE500F00FC3 /* Category.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -281,6 +284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2CFDAA11B6A97A3007F3C15 /* AppDelegate.swift in Sources */,
+				4705C1341DA04BE500F00FC3 /* Category.swift in Sources */,
 				A2CFDAA01B6A97A3007F3C15 /* AddNewEntryController.swift in Sources */,
 				A2CFDA981B6A9788007F3C15 /* LogViewController.swift in Sources */,
 				A2CFDAA81B6A97E1007F3C15 /* SpecimenAnnotation.swift in Sources */,
