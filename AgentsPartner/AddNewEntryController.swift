@@ -21,6 +21,7 @@
 */
 
 import UIKit
+import RealmSwift
 
 
 class AddNewEntryController: UIViewController {
@@ -30,12 +31,43 @@ class AddNewEntryController: UIViewController {
   @IBOutlet weak var descriptionTextField: UITextView!
   
   var selectedAnnotation: SpecimenAnnotation!
+  var selectedCategory: Category!
+  var specimen: Specimen!
+  
+  override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+    if validateFields() {
+      addNewSpecimen()
+      return true
+    } else {
+      return false
+    }
+  }
+  
+  func addNewSpecimen() {
+    let realm = try! Realm()
+  
+    // start transaction to add new specimen
+    try! realm.write {
+      let newSpecimen = Specimen()
+  
+      newSpecimen.name = self.nameTextField.text!
+      newSpecimen.category = self.selectedCategory
+      newSpecimen.specimenDescription = self.descriptionTextField.text
+      newSpecimen.latitude = self.selectedAnnotation.coordinate.latitude
+      newSpecimen.longitude = self.selectedAnnotation.coordinate.longitude
+      
+      // add to realm
+      realm.add(newSpecimen)
+      self.specimen = newSpecimen
+      
+    }
+  }
   
   //MARK: - Validation
   
   func validateFields() -> Bool {
     
-    if nameTextField.text!.isEmpty || descriptionTextField.text!.isEmpty {
+    if nameTextField.text!.isEmpty || descriptionTextField.text!.isEmpty || selectedCategory == nil {
       let alertController = UIAlertController(title: "Validation Error", message: "All fields must be filled", preferredStyle: .Alert)
       let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive) { alert in
         alertController.dismissViewControllerAnimated(true, completion: nil)
@@ -58,7 +90,13 @@ class AddNewEntryController: UIViewController {
   
   //MARK: - Actions
   
-  @IBAction func unwindFromCategories(segue: UIStoryboardSegue) {    
+  // is called when the user selects a category from the CategoriesTableViewController
+  @IBAction func unwindFromCategories(segue: UIStoryboardSegue) {
+    if segue.identifier == "CategorySelectedSegue" {
+      let categoriesController = segue.sourceViewController as! CategoriesTableViewController
+      selectedCategory = categoriesController.selectedCategory
+      categoryTextField.text = selectedCategory.name
+    }
   }
 }
 
