@@ -22,10 +22,12 @@
 
 import UIKit
 import MapKit
+import RealmSwift
 
 class LogViewController: UITableViewController {
   
-  var specimens = []
+  // holds the specimens from the db and sort them by name
+  var specimens = try! Realm().objects(Specimen).sorted("name", ascending: true)
   var searchResults = []
   
   @IBOutlet weak var segmentedControl: UISegmentedControl!
@@ -92,6 +94,28 @@ extension LogViewController {
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = self.tableView.dequeueReusableCellWithIdentifier("LogCell") as! LogCell
+    
+    let specimen = specimens[indexPath.row]
+    
+    cell.titleLabel.text = specimen.name
+    cell.subtitleLabel.text = specimen.category.name
+    
+    switch specimen.category.name {
+    case "Uncategorized":
+      cell.iconImageView.image = UIImage(named: "IconUncategorized")
+    case "Reptiles":
+      cell.iconImageView.image = UIImage(named: "IconReptile")
+    case "Flora":
+      cell.iconImageView.image = UIImage(named: "IconFlora")
+    case "Birds":
+      cell.iconImageView.image = UIImage(named: "IconBird")
+    case "Arachnid":
+      cell.iconImageView.image = UIImage(named: "IconArachnid")
+    case "Mammals":
+      cell.iconImageView.image = UIImage(named: "IconMammal")
+    default:
+      cell.iconImageView.image = UIImage(named: "IconUncategorized")
+    }
     
     return cell
   }
