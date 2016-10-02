@@ -7,7 +7,7 @@ target 'Agents Partner' do
 
   # Pods for Agents Partner
   pod 'RealmSwift'
-  
+
 end
 
 post_install do |installer|
