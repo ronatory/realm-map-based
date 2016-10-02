@@ -21,18 +21,53 @@
 */
 
 import UIKit
+import RealmSwift
 
 
 class CategoriesTableViewController: UITableViewController {
   
-  var categories = []
+  
+  let realm = try! Realm()
+  // to fetch objects, you need to define which models you want
+  // here you populate categories by calling objects (_:) on it, 
+  // passing the class name of the model you want
+  /*
+   NOTE: To simplify the code required in this tutorial,
+   you’ll be used try! when calling Realm methods that throw an error. 
+   In your own code, you should really be using 
+   try and do / catch to catch errors and handle them appropriately.
+   */
+  lazy var categories: Results<Category> = {  self.realm.objects(Category) }()
+  var selectedCategory: Category!
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    populateDefaultCategories()
   }
   
   override func preferredStatusBarStyle() -> UIStatusBarStyle {
     return .Default
+  }
+  
+  // helper method to give the user the opportunity to choose from default categories
+  func populateDefaultCategories() {
+    
+    if categories.count == 0 {
+      
+      try! realm.write() {
+        let defaultCategories = ["Birds", "Mammals", "Flora", "Reptiles", "Arachnids" ]
+        
+        for category in defaultCategories {
+          let newCategroy = Category()
+          newCategroy.name = category
+          self.realm.add(newCategroy)
+        }
+      }
+      
+      categories = realm.objects(Category)
+      
+    }
+    
   }
 }
 
@@ -48,13 +83,16 @@ extension CategoriesTableViewController {
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("CategoryCell", forIndexPath: indexPath) 
+    let cell = tableView.dequeueReusableCellWithIdentifier("CategoryCell", forIndexPath: indexPath)
+    
+    let category = categories[indexPath.row]
+    cell.textLabel?.text = category.name
     
     return cell
   }
     
   override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath {
-    
+    selectedCategory = categories[indexPath.row]
     return indexPath
   }
 }
