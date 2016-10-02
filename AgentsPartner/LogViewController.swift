@@ -153,5 +153,22 @@ extension LogViewController {
     return cell
   }
   
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if (segue.identifier == "Edit") {
+      let controller = segue.destinationViewController as! AddNewEntryController
+      var selectedSpecimen: Specimen!
+      let indexPath = tableView.indexPathForSelectedRow
+      
+      if searchController.active {
+        let searchResultsController = searchController.searchResultsController as! UITableViewController
+        let indexPathSearch = searchResultsController.tableView.indexPathForSelectedRow
+        selectedSpecimen = searchResults[indexPathSearch!.row]
+      } else {
+        selectedSpecimen = specimens[indexPath!.row]
+      }
+      controller.specimen = selectedSpecimen
+    }
+  }
+  
 }
 
