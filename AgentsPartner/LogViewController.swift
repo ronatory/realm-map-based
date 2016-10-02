@@ -28,11 +28,27 @@ class LogViewController: UITableViewController {
   
   // holds the specimens from the db and sort them by name
   var specimens = try! Realm().objects(Specimen).sorted("name", ascending: true)
-  var searchResults = []
+  var searchResults = try! Realm().objects(Specimen)
   
   @IBOutlet weak var segmentedControl: UISegmentedControl!
   
   var searchController: UISearchController!
+  
+  func filterResultsWithSearchString(searchString: String) {
+    // [c] indicates an insensitiv search
+    let predicate = NSPredicate(format: "name BEGINSWITH [c]%@", searchString)
+    let scopeIndex = searchController.searchBar.selectedScopeButtonIndex
+    let realm = try! Realm()
+    
+    switch scopeIndex {
+    case 0:
+      searchResults = realm.objects(Specimen).filter(predicate).sorted("name", ascending: true)
+    case 1:
+      searchResults = realm.objects(Specimen).filter(predicate).sorted("created", ascending: true)
+    default:
+      searchResults = realm.objects(Specimen).filter(predicate)
+    }
+  }
   
   // MARK: - View Lifecycle
   
@@ -63,6 +79,18 @@ class LogViewController: UITableViewController {
   //MARK: - Actions & Segues
   
   @IBAction func scopeChanged(sender: AnyObject) {
+    let scopeBar = sender as! UISegmentedControl
+    let realm = try! Realm()
+    
+    switch scopeBar.selectedSegmentIndex {
+    case 0:
+      specimens = realm.objects(Specimen).sorted("name", ascending: true)
+    case 1:
+      specimens = realm.objects(Specimen).sorted("created", ascending: true)
+    default:
+      specimens = realm.objects(Specimen).sorted("name", ascending: true)
+    }
+    tableView.reloadData()
   }
 }
 
@@ -70,6 +98,10 @@ class LogViewController: UITableViewController {
 extension LogViewController: UISearchResultsUpdating {
   
   func updateSearchResultsForSearchController(searchController: UISearchController) {
+    // perform filtering when user interacts with search field
+    let searchString = searchController.searchBar.text!
+    filterResultsWithSearchString(searchString)
+    
     let searchResultsController = searchController.searchResultsController as! UITableViewController
     searchResultsController.tableView.reloadData()
   }
@@ -95,7 +127,8 @@ extension LogViewController {
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = self.tableView.dequeueReusableCellWithIdentifier("LogCell") as! LogCell
     
-    let specimen = specimens[indexPath.row]
+    // if user clicks in the search field show searchResults, otherwise specimens
+    let specimen = searchController.active ? searchResults[indexPath.row] : specimens[indexPath.row]
     
     cell.titleLabel.text = specimen.name
     cell.subtitleLabel.text = specimen.category.name
