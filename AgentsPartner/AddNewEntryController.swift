@@ -34,9 +34,31 @@ class AddNewEntryController: UIViewController {
   var selectedCategory: Category!
   var specimen: Specimen!
   
+  func updateSpecimen() {
+    let realm = try! Realm()
+    try! realm.write {
+      // update the three data fields
+      self.specimen.name = self.nameTextField.text!
+      self.specimen.category = self.selectedCategory
+      self.specimen.specimenDescription = self.descriptionTextField.text
+    }
+  }
+  
+  func fillTextFields() {
+    nameTextField.text = specimen.name
+    categoryTextField.text = specimen.category.name
+    descriptionTextField.text = specimen.specimenDescription
+    
+    selectedCategory = specimen.category
+  }
+  
   override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
     if validateFields() {
-      addNewSpecimen()
+      if specimen != nil {
+        updateSpecimen()
+      } else {
+        addNewSpecimen() 
+      }
       return true
     } else {
       return false
@@ -85,6 +107,12 @@ class AddNewEntryController: UIViewController {
   //MARK: - View Lifecycle
   
   override func viewDidLoad() {
+    if let specimen = specimen {
+      title = "Edit \(specimen.name)"
+      fillTextFields()
+    } else {
+      title = "Add New Specimen"
+    }
     super.viewDidLoad()
   }
   
